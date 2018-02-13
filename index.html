@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Untitled Document</title>
+
+        <!-- Style Sheet -->
+        <link rel="stylesheet" type="text/css" href="style.css"></link>
+        <!-- Style Sheet -->
+
+        <script>
+
+            var img = ["chicken-icon.png", "crab-icon.png", "dolphin-icon.png", "gold-fish-icon.png", "horse-icon.png", "octopus-icon.png", "rabbit-icon.png", "turtle-icon.png", "chicken-icon.png", "crab-icon.png", "dolphin-icon.png", "gold-fish-icon.png", "horse-icon.png", "octopus-icon.png", "rabbit-icon.png", "turtle-icon.png"];
+
+            //Array of the images name
+
+            var box;
+
+            // variable for the boxes
+
+            var nums = createScrambledArray(16);
+
+            //total number of divs has been created as its placed into that method in order to randomize
+
+            function createScrambledArray(n) {
+                var nums = [];
+
+                for (var i = 0; i < n; i++) {
+                    var temp = Math.floor(Math.random() * n);
+                    while (nums.indexOf(temp) >= 0) {
+                        temp = Math.floor(Math.random() * n);
+                    }
+                    nums.push(temp);
+                }
+                return nums;
+            }
+
+            window.onload = function () {
+                titleExpand();
+                for (var i = 0; i <= nums.length; i++) {
+                    box = document.getElementById("img" + nums[i]);
+                    box.innerHTML = '<img src="images/' + img[i] + '" class="imgHide" alt="' + img[i] + '"/>';
+                    //console.log(box);
+                    // - for testing purposes -
+                }
+
+
+            }
+
+            var first;
+            var second;
+            var firstImg;
+            var secondImg;
+            var firstbox;
+            var secondbox;
+            var clickCount = 0;
+            var selected;
+            var count = 0;
+            var clickcc = false;
+
+            function clickhandler(n) {
+
+
+                var images = document.getElementsByTagName("img");
+                var divs = document.getElementsByClassName("box");
+                //getting tag name
+
+                var classname = images.item(n).className;
+                //getting class name
+
+                if (clickCount === 0) {
+
+                    if (classname === "imgHide") {
+                        images.item(n).className = "imgShow";
+                        divs.item(n).classList.remove("flipX");
+                        firstbox = divs.item(n);
+                        first = images.item(n);
+                        firstImg = images.item(n).alt;
+                        //for making the image visable and increasing the count if it proceeds furthuer
+                        firstbox.classList.add("flipY");
+                        clickCount++;
+                    }
+                } else if (clickCount === 1) {
+
+                    OtherImage = images.item(n).alt;
+                    if (classname === "imgHide") {
+                        images.item(n).className = "imgShow";
+                        divs.item(n).classList.remove("flipX");
+                        secondbox = divs.item(n);
+                        second = images.item(n);
+                        secondbox.classList.add("flipY");
+
+
+
+
+                        if (firstImg !== OtherImage) {
+                            alert("Not a match");
+                            first.className = "imgHide";
+                            second.className = "imgHide";
+                            firstbox.classList.remove("flipY");
+                            secondbox.classList.remove("flipY");
+							firstbox.classList.add("flipX");
+                            secondbox.classList.add("flipX");
+                            resetAll();
+
+                        } else {
+
+                            count++;
+                            first.parentNode.removeAttribute("clicked");
+                            second.parentNode.removeAttribute("clicked");
+                            addEventListener("transitionend", grow, false);
+                            resetAll();
+                            check();
+
+
+                        }
+
+                    } else if (firstImg === OtherImage) {
+                        images.item(n).className = "imgHide";
+                        divs.item(n).classList.remove("flipY");
+                        divs.item(n).classList.add("flipX");
+                        clickCount = 0;
+
+
+
+                    }
+
+                }
+
+            }
+
+            function grow() {
+                firstbox.className = "box spacing grow";
+                secondbox.className = "box spacing grow";
+                addEventListener("transitionend", resett, false);
+            }
+			
+			 function resett() {
+                firstbox.className = "box spacing";
+                secondbox.className = "box spacing";
+                addEventListener("transitionend", revert, false);
+            }
+			
+			  function revert() {
+                firstbox.className = "box spacing revert";
+                secondbox.className = "box spacing revert";
+				addEventListener("transitionend", spin, false);
+            }
+
+            function spin() {
+                firstbox.className = "box spacing spin";
+                secondbox.className = "box spacing spin";
+            }
+
+
+            function titleExpand() {
+                var elem = document.getElementById("header");
+                elem.className = "title-expand"
+                elem.addEventListener("transitionend", titleShrink, false);
+            }
+
+            function titleShrink() {
+                document.getElementById("header").className = "";
+            }
+
+
+
+
+            function check() {
+                if (count === 8) {
+                    alert("You win!");
+					document.getElementsByClassName("container")[0].className += " spin";
+                }
+            }
+
+            function resetAll() {
+                clickCount = 0;
+                firstImg = null;
+                secondImg = null;
+                img1 = null;
+                img2 = null;
+                first = null;
+                second = null;
+            }
+
+
+
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <h1>MATCHING GAME </h1>
+        </div>
+        <div class="container">
+            <div id="img0" class="box spacing" onclick="clickhandler(0)"></div>
+            <div id="img1" class="box spacing" onclick="clickhandler(1)"></div>
+            <div id="img2" class="box spacing" onclick="clickhandler(2)"></div>
+            <div id="img3" class="box" onclick="clickhandler(3)"></div>
+            <div id="img4" class="box spacing" onclick="clickhandler(4)"></div>
+            <div id="img5" class="box spacing" onclick="clickhandler(5)"></div>
+            <div id="img6" class="box spacing" onclick="clickhandler(6)"></div>
+            <div id="img7" class="box" onclick="clickhandler(7)"></div>
+            <div id="img8" class="box spacing" onclick="clickhandler(8)"></div>
+            <div id="img9" class="box spacing" onclick="clickhandler(9)"></div>
+            <div id="img10" class="box spacing" onclick="clickhandler(10)"></div>
+            <div id="img11" class="box" onclick="clickhandler(11)"></div>
+            <div id="img12" class="box spacing" onclick="clickhandler(12)"></div>
+            <div id="img13" class="box spacing" onclick="clickhandler(13)"></div>
+            <div id="img14" class="box spacing" onclick="clickhandler(14)"></div>
+            <div id="img15" class="box" onclick="clickhandler(15)"></div>
+        </div>
+    </body>
+</html>
